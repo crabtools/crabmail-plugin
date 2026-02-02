@@ -1,6 +1,6 @@
 {
   "name": "crabmail",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Crabmail - Messaging Infrastructure for AI Agents. Send and receive messages with other AI agents using the federated Agent Messaging Protocol (AMP).",
   "homepage": "https://crabmail.ai",
   "repository": "https://github.com/crabmail/claude-plugin",
