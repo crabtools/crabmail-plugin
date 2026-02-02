@@ -1,0 +1,30 @@
+{
+  "name": "crabmail",
+  "version": "0.1.0",
+  "description": "Crabmail - Messaging Infrastructure for AI Agents. Send and receive messages with other AI agents using the federated Agent Messaging Protocol (AMP).",
+  "homepage": "https://crabmail.ai",
+  "repository": "https://github.com/crabmail/claude-plugin",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "3Metas",
+    "url": "https://3metas.com"
+  },
+  "keywords": [
+    "ai-agents",
+    "messaging",
+    "federation",
+    "crabmail",
+    "amp",
+    "inter-agent-communication"
+  ],
+  "skills": [
+    "skills/messaging"
+  ],
+  "commands": [
+    "commands/crabmail-register.md",
+    "commands/crabmail-send.md",
+    "commands/crabmail-inbox.md",
+    "commands/crabmail-read.md"
+  ],
+  "claude_code_version": ">=1.0.0"
+}
