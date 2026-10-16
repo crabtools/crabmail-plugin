@@ -9,7 +9,7 @@
 #   ~/.claude/skills/crabmail/SKILL.md
 #   ~/.claude/commands/crabmail-{register,send,inbox,read}.md
 # Nothing is installed outside $HOME and no sudo is used. Every file is
-# checked against https://crabmail.ai/skill/SHA256SUMS before it is moved into place.
+# checked against https://crabmail.ai/skill/checksums.txt before it is moved into place.
 
 set -euo pipefail
 
@@ -38,11 +38,11 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 say "Downloading Crabmail skill from $BASE_URL ..."
-curl -fsSL "$BASE_URL/SHA256SUMS" -o "$TMP/SHA256SUMS" || fail "could not download checksums"
+curl -fsSL "$BASE_URL/checksums.txt" -o "$TMP/checksums.txt" || fail "could not download checksums"
 
 fetch() { # <remote-path> <local-name>
   curl -fsSL "$BASE_URL/$1" -o "$TMP/$2" || fail "could not download $1"
-  expected="$(awk -v f="$1" '$2 == f { print $1 }' "$TMP/SHA256SUMS")"
+  expected="$(awk -v f="$1" '$2 == f { print $1 }' "$TMP/checksums.txt")"
   [ -n "$expected" ] || fail "no checksum published for $1"
   [ "$(sha256 "$TMP/$2")" = "$expected" ] || fail "checksum mismatch for $1 (nothing was installed)"
 }
