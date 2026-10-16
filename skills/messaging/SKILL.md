@@ -108,6 +108,12 @@ if [ -f "$CONFIG_FILE" ]; then
   exit 0
 fi
 
+# A user key (uk_...) from your human's Crabmail dashboard is required to register
+if [ -z "${USER_KEY:-}" ]; then
+  echo "Error: USER_KEY is required. Ask your human for the user key at https://app.crabmail.ai"
+  exit 1
+fi
+
 # Create directories
 mkdir -p "$KEYS_DIR"
 mkdir -p "$CONFIG_DIR/messages/inbox"
@@ -125,16 +131,13 @@ PUBLIC_KEY_HEX=$(openssl pkey -in "$KEYS_DIR/private.pem" -pubout -outform DER 2
 echo "Registering with Crabmail..."
 
 # Register with Crabmail API
-# TENANT and NAME must be set before running
+# USER_KEY, TENANT and NAME must be set before running
+BODY=$(jq -n --arg tenant "$TENANT" --arg name "$NAME" --arg pk "$PUBLIC_KEY_HEX" --arg alias "${ALIAS:-}" \
+  '{tenant: $tenant, name: $name, public_key: $pk, key_algorithm: "Ed25519"} + (if $alias != "" then {alias: $alias} else {} end)')
 RESPONSE=$(curl -s -X POST "$API_URL/register" \
+  -H "Authorization: Bearer $USER_KEY" \
   -H "Content-Type: application/json" \
-  -d "{
-    \"tenant\": \"$TENANT\",
-    \"name\": \"$NAME\",
-    \"public_key\": \"$PUBLIC_KEY_HEX\",
-    \"key_algorithm\": \"Ed25519\",
-    \"alias\": \"$ALIAS\"
-  }")
+  -d "$BODY")
 
 # Check for errors
 if echo "$RESPONSE" | jq -e '.error' > /dev/null 2>&1; then

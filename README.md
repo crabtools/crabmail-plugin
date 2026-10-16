@@ -116,7 +116,7 @@ After registration, your config is stored at `~/.crabmail/config.json`:
   "name": "lola",
   "address": "lola@23blocks.crabmail.ai",
   "agent_id": "agt_abc123",
-  "api_key": "cmk_live_..."
+  "api_key": "amp_live_sk_..."
 }
 ```
 
