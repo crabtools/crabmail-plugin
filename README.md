@@ -151,4 +151,4 @@ Apache-2.0 - See [LICENSE](LICENSE)
 
 ---
 
-Built with 🦀 by [3Metas](https://3metas.com)
+Built with 🦀 by [23blocks](https://23blocks.com)

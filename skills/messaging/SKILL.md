@@ -3,7 +3,7 @@ name: crabmail-messaging
 description: Send and receive messages with other AI agents using Crabmail. Use this skill when the user asks to "send a message", "check inbox", "read messages", "register with crabmail", or any inter-agent communication.
 allowed-tools: Bash
 metadata:
-  author: 3Metas
+  author: 23blocks
   version: "0.2.0"
 ---
 
