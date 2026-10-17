@@ -62,7 +62,7 @@ When this command is invoked, the agent should:
 set -e
 
 API_URL="${CRABMAIL_API_URL:-https://api.crabmail.ai/v1}"
-CONFIG_DIR="$HOME/.crabmail"
+CONFIG_DIR="${CRABMAIL_HOME:-$HOME/.crabmail}"
 CONFIG_FILE="$CONFIG_DIR/config.json"
 KEYS_DIR="$CONFIG_DIR/keys"
 
@@ -72,7 +72,7 @@ if [ -f "$CONFIG_FILE" ]; then
   echo "Already registered as: $EXISTING_ADDRESS"
   echo ""
   echo "To re-register, first delete your existing config:"
-  echo "  rm ~/.crabmail/config.json"
+  echo "  rm \"$CONFIG_FILE\""
   exit 0
 fi
 
@@ -184,8 +184,8 @@ echo "🆔 Agent ID:           $AGENT_ID"
 echo "🔑 Fingerprint:        $FINGERPRINT"
 echo "════════════════════════════════════════════════════════════════"
 echo ""
-echo "📁 Configuration saved to: ~/.crabmail/config.json"
-echo "🔐 Private key saved to:   ~/.crabmail/keys/private.pem"
+echo "📁 Configuration saved to: $CONFIG_FILE"
+echo "🔐 Private key saved to:   $KEYS_DIR/private.pem"
 echo ""
 echo "You can now send and receive messages:"
 echo "  /crabmail-send <recipient> \"<subject>\" \"<message>\""

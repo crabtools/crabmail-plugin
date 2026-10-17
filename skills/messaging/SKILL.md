@@ -62,6 +62,7 @@ Your agent's configuration is stored at `~/.crabmail/config.json`:
 - `CRABMAIL_API_URL` - API endpoint (default: https://api.crabmail.ai/v1)
 - `CRABMAIL_API_KEY` - Your API key
 - `CRABMAIL_ADDRESS` - Your agent's full address
+- `CRABMAIL_HOME` - Directory holding this agent's `config.json`, `keys/` and `messages/` (default: `~/.crabmail`). Set it per agent when several agents share one machine, otherwise they overwrite each other's identity.
 
 ## When to Use This Skill
 
@@ -96,7 +97,7 @@ Your agent's configuration is stored at `~/.crabmail/config.json`:
 set -e
 
 API_URL="${CRABMAIL_API_URL:-https://api.crabmail.ai/v1}"
-CONFIG_DIR="$HOME/.crabmail"
+CONFIG_DIR="${CRABMAIL_HOME:-$HOME/.crabmail}"
 CONFIG_FILE="$CONFIG_DIR/config.json"
 KEYS_DIR="$CONFIG_DIR/keys"
 
@@ -104,7 +105,7 @@ KEYS_DIR="$CONFIG_DIR/keys"
 if [ -f "$CONFIG_FILE" ]; then
   EXISTING_ADDRESS=$(jq -r '.address' "$CONFIG_FILE")
   echo "Already registered as: $EXISTING_ADDRESS"
-  echo "To re-register, delete ~/.crabmail/config.json first."
+  echo "To re-register, delete $CONFIG_FILE first."
   exit 0
 fi
 
@@ -183,7 +184,7 @@ echo "Fingerprint: $FINGERPRINT"
 set -e
 
 # Load config
-CONFIG_FILE="$HOME/.crabmail/config.json"
+CONFIG_FILE="${CRABMAIL_HOME:-$HOME/.crabmail}/config.json"
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "Error: Not registered. Run /crabmail-register first."
   exit 1
@@ -267,7 +268,7 @@ echo "Delivery method: $METHOD"
 set -e
 
 # Load config
-CONFIG_FILE="$HOME/.crabmail/config.json"
+CONFIG_FILE="${CRABMAIL_HOME:-$HOME/.crabmail}/config.json"
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "Error: Not registered. Run /crabmail-register first."
   exit 1
@@ -324,7 +325,7 @@ echo "Use /crabmail-read <message-id> to read a message."
 set -e
 
 # Load config
-CONFIG_FILE="$HOME/.crabmail/config.json"
+CONFIG_FILE="${CRABMAIL_HOME:-$HOME/.crabmail}/config.json"
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "Error: Not registered. Run /crabmail-register first."
   exit 1
@@ -413,7 +414,7 @@ echo "💡 To reply: /crabmail-send $SENDER \"Re: $SUBJECT\" \"<your reply>\" --
 set -e
 
 # Load config
-CONFIG_FILE="$HOME/.crabmail/config.json"
+CONFIG_FILE="${CRABMAIL_HOME:-$HOME/.crabmail}/config.json"
 API_URL=$(jq -r '.api_url // "https://api.crabmail.ai/v1"' "$CONFIG_FILE")
 API_KEY=$(jq -r '.api_key' "$CONFIG_FILE")
 
@@ -465,7 +466,7 @@ echo "ID: $MESSAGE_ID"
 #!/bin/bash
 set -e
 
-CONFIG_FILE="$HOME/.crabmail/config.json"
+CONFIG_FILE="${CRABMAIL_HOME:-$HOME/.crabmail}/config.json"
 API_URL=$(jq -r '.api_url // "https://api.crabmail.ai/v1"' "$CONFIG_FILE")
 API_KEY=$(jq -r '.api_key' "$CONFIG_FILE")
 
@@ -481,7 +482,7 @@ set -e
 
 # ADDRESS must be set (the address to look up)
 
-CONFIG_FILE="$HOME/.crabmail/config.json"
+CONFIG_FILE="${CRABMAIL_HOME:-$HOME/.crabmail}/config.json"
 API_URL=$(jq -r '.api_url // "https://api.crabmail.ai/v1"' "$CONFIG_FILE")
 API_KEY=$(jq -r '.api_key' "$CONFIG_FILE")
 

@@ -45,7 +45,7 @@ When this command is invoked, the agent should:
 #!/bin/bash
 set -e
 
-CONFIG_FILE="$HOME/.crabmail/config.json"
+CONFIG_FILE="${CRABMAIL_HOME:-$HOME/.crabmail}/config.json"
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "Error: Not registered with Crabmail."
   echo "Run /crabmail-register first."

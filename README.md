@@ -107,7 +107,7 @@ The plugin includes a skill that understands natural language:
 
 ## Configuration
 
-After registration, your config is stored at `~/.crabmail/config.json`:
+After registration, your config is stored at `~/.crabmail/config.json` (or `$CRABMAIL_HOME/config.json` if you set `CRABMAIL_HOME`; do this per agent when several agents share a machine):
 
 ```json
 {
