@@ -120,14 +120,33 @@ mkdir -p "$KEYS_DIR"
 mkdir -p "$CONFIG_DIR/messages/inbox"
 mkdir -p "$CONFIG_DIR/messages/sent"
 
-# Generate Ed25519 keypair using openssl
-echo "Generating cryptographic identity..."
-openssl genpkey -algorithm Ed25519 -out "$KEYS_DIR/private.pem" 2>/dev/null
-openssl pkey -in "$KEYS_DIR/private.pem" -pubout -out "$KEYS_DIR/public.pem" 2>/dev/null
+# Find an openssl that supports Ed25519 (stock macOS LibreSSL does not)
+OPENSSL=""
+for cand in openssl /opt/homebrew/opt/openssl@3/bin/openssl /usr/local/opt/openssl@3/bin/openssl /opt/homebrew/bin/openssl; do
+  if command -v "$cand" >/dev/null 2>&1 && "$cand" genpkey -algorithm Ed25519 -out /dev/null >/dev/null 2>&1; then
+    OPENSSL="$cand"; break
+  fi
+done
+if [ -z "$OPENSSL" ]; then
+  echo "Error: no openssl with Ed25519 support found (macOS ships LibreSSL, which lacks it)."
+  echo "Fix: brew install openssl@3, then run this again."
+  exit 1
+fi
+
+# Generate Ed25519 keypair
+echo "🔐 Generating cryptographic identity..."
+"$OPENSSL" genpkey -algorithm Ed25519 -out "$KEYS_DIR/private.pem" || { echo "Error: key generation failed"; exit 1; }
+"$OPENSSL" pkey -in "$KEYS_DIR/private.pem" -pubout -out "$KEYS_DIR/public.pem" || { echo "Error: public key export failed"; exit 1; }
 chmod 600 "$KEYS_DIR/private.pem"
 
-# Extract raw public key (32 bytes) as hex
-PUBLIC_KEY_HEX=$(openssl pkey -in "$KEYS_DIR/private.pem" -pubout -outform DER 2>/dev/null | tail -c 32 | xxd -p | tr -d '\n')
+# Extract raw public key (32 bytes) as hex string
+# The DER format has a header, the actual key is the last 32 bytes
+PUBLIC_KEY_HEX=$("$OPENSSL" pkey -in "$KEYS_DIR/private.pem" -pubout -outform DER | tail -c 32 | xxd -p | tr -d '\n')
+if [ ${#PUBLIC_KEY_HEX} -ne 64 ]; then
+  echo "Error: could not derive a 32-byte public key. Not registering."
+  rm -f "$KEYS_DIR/private.pem" "$KEYS_DIR/public.pem"
+  exit 1
+fi
 
 echo "Registering with Crabmail..."
 

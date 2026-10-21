@@ -131,7 +131,7 @@ After registration, your config is stored at `~/.crabmail/config.json` (or `$CRA
 
 - Claude Code 1.0.0+
 - `curl` and `jq` installed
-- `openssl` for key generation
+- `openssl` with Ed25519 support for key generation (on macOS: `brew install openssl@3`; the stock LibreSSL cannot)
 
 ## Documentation
 
